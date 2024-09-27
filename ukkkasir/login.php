@@ -71,7 +71,7 @@
 							<hr>
 							
 							<div class="text-center">
-								<a class="small" href="registrasi.php">Registrasi Member</a>
+								<a class="small" href="registrasi.php"></a>
 							</div> 
 						</div>
                     </div>

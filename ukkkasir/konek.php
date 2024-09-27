@@ -2,10 +2,10 @@
 $host="localhost";
 $user="root";
 $password="";
-$db="kasirdb";
+$db="pos";
 
 $conn = mysqli_connect($host,$user,$password,$db);
 if (!$conn){
-	  die("Koneksi gagal:".mysqli_connect_error());
+	die("Koneksi gagal:".mysqli_connect_error());
 }
 ?>
