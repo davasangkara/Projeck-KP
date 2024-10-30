@@ -88,7 +88,7 @@ if (!empty($_SESSION['admin'])) {
                 $unitId,
             ];
 
-            $sql = 'INSERT INTO barang (id_kategori,nama_barang, merk,unit_id) 
+            $transactionSql = 'INSERT INTO barang (id_kategori,nama_barang, merk,unit_id) 
                     VALUES (?, ?, ?, ?)';
 
             $barangStmt = $config->prepare($sql);
@@ -107,6 +107,60 @@ if (!empty($_SESSION['admin'])) {
             echo 'Kesalahan: ' . $e->getMessage();
         }
     }
+
+
+    if (!empty($_GET['stock'])) {
+        try {
+            $config->beginTransaction();
+
+            $idBarang = htmlentities($_POST['barang']);
+            $hargaBeli = htmlentities($_POST['harga_beli']);
+            $hargaJual = htmlentities($_POST['harga_jual']);
+            $stok = htmlentities($_POST['stok']);
+
+            $cekSql = 'SELECT * FROM transaksi WHERE barang_id = ? AND type = "IN" LIMIT 1';
+            $cekStmt = $config->prepare($cekSql);
+            $cekStmt->execute([$idBarang]);
+            $existingData = $cekStmt->fetch();
+
+            if ($existingData) {
+                $updateSql = 'UPDATE transaksi SET 
+                              harga_beli = ?, harga_jual = ?, stok = stok + ? 
+                              WHERE barang_id = ? AND type = "IN"';
+                $updateStmt = $config->prepare($updateSql);
+
+                if (!$updateStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                    throw new Exception("Gagal memperbarui stok!");
+                }
+            } else {
+                $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id) 
+                              VALUES ("IN", ?, ?, ?, ?)';
+                $insertStmt = $config->prepare($insertSql);
+
+                if (!$insertStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                    throw new Exception("Gagal menambah stok!");
+                }
+            }
+
+            $transaksiStockSql = 'INSERT INTO stok_transactions (type, harga_beli, harga_jual, stok, barang_id, transaction_date)
+                                  VALUES("IN", ?, ?, ?, ?, NOW())';
+            $transactionStockStmt = $config->prepare($transaksiStockSql);
+
+            if (!$transactionStockStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                throw new Exception("Gagal mencatat transaksi stok!");
+            }
+
+            $config->commit();
+            echo '<script>window.location="../../index.php?page=stock&success=tambah-data"</script>';
+        } catch (PDOException $e) {
+            $config->rollBack();
+            echo 'Kesalahan Database: ' . $e->getMessage();
+        } catch (Exception $e) {
+            $config->rollBack();
+            echo 'Kesalahan: ' . $e->getMessage();
+        }
+    }
+
 
     if (!empty($_GET['jual'])) {
         $id = $_GET['id'];

@@ -34,9 +34,6 @@
             </thead>
             <tbody>
                 <?php
-                $totalBeli = 0;
-                $totalJual = 0;
-                $totalStok = 0;
                 $hasil = $lihat->getAllMasterBarang();
                 $no = 1;
                 foreach ($hasil as $isi) {

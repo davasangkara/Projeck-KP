@@ -24,31 +24,35 @@ $hasil_profil = $lihat->member_edit($id);
             <span>Dashboard</span></a>
     </li>
 
-    <!-- Divider -->
     <hr class="sidebar-divider">
-    <!-- Heading -->
-    <!-- <div class="sidebar-heading">
-           Master
-       </div> -->
 
-    <!--Master Start-->
-    <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-            aria-controls="collapseTwo">
+            aria-controls="collapseOne">
             <i class="fas fa-fw fa-database"></i>
             <span>Master</span>
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <!-- <a class="collapse-item" href="index.php?page=master-product">Product</a> -->
                 <a class="collapse-item" href="index.php?page=kategori">Kategori</a>
                 <a class="collapse-item" href="index.php?page=master_barang">Barang</a>
             </div>
         </div>
     </li>
-    <!--Master End-->
-    <!-- Nav Item - Pages Collapse Menu -->
+
+    <li class="nav-item active">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+            aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-cubes"></i>
+            <span>Stock</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="index.php?page=stock">Stock Barang</a>
+            </div>
+        </div>
+    </li>
+
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3" aria-expanded="true"
             aria-controls="collapse3">

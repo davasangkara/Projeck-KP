@@ -298,11 +298,11 @@ class view
 
     public function getAllTransactionStockIn()
     {
-        $sql = "select transaksi.*,
+        $sql = "select stok_transactions.*,
                 barang.nama_barang
-                from transaksi 
-                inner join barang on transaksi.barang_id = barang.id
-                where transaksi.type like 'IN'
+                from stok_transactions 
+                inner join barang on stok_transactions.barang_id = barang.id
+                where stok_transactions.type like 'IN'
                 ";
         $row = $this->db->prepare($sql);
         $row->execute();

@@ -46,7 +46,7 @@ $headerStyle = [
 $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
 $sheet->getRowDimension(1)->setRowHeight(30);
 
-foreach (range('A', 'E') as $column) {
+foreach (range('A', 'F') as $column) {
     $sheet->getColumnDimension($column)->setAutoSize(true);
 }
 
@@ -64,6 +64,7 @@ foreach ($hasil as $index => $isi) {
     $sheet->setCellValue('C' . $row, $isi['stok']);
     $sheet->setCellValue('D' . $row, $isi['harga_beli']);
     $sheet->setCellValue('E' . $row, $isi['harga_jual']);
+    $sheet->setCellValue('F' . $row, $isi['transaction_date']);
     $row++;
 }
 
