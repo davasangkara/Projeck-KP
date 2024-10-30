@@ -23,8 +23,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-$headers = ['No', 'Nama Barang', 'Stok', 'Harga Beli', 'Harga Jual'];
-foreach (range('A', 'E') as $index => $column) {
+$headers = ['No', 'Nama Barang', 'Stok', 'Harga Beli', 'Harga Jual', 'Transaction Date'];
+foreach (range('A', 'F') as $index => $column) {
     $sheet->setCellValue($column . '1', $headers[$index]);
 }
 
@@ -43,7 +43,7 @@ $headerStyle = [
         'vertical' => Alignment::VERTICAL_CENTER,
     ],
 ];
-$sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+$sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
 $sheet->getRowDimension(1)->setRowHeight(30);
 
 foreach (range('A', 'F') as $column) {
@@ -68,7 +68,7 @@ foreach ($hasil as $index => $isi) {
     $row++;
 }
 
-$dataRange = 'A1:E' . ($row - 1);
+$dataRange = 'A1:F' . ($row - 1);
 $borderStyle = [
     'borders' => [
         'allBorders' => [
