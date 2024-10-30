@@ -71,15 +71,6 @@ if (!empty($_GET['uid'])) {
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_kategori']; ?></td>
                         <td><?php echo $isi['tgl_input']; ?></td>
-                        <!-- <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input toggle-status" type="checkbox" role="switch" id="statusSwitch<?php echo $isi['id_kategori']; ?>"
-                                <?php echo $isi['status'] ? 'checked' : ''; ?> data-id="<?php echo $isi['id_kategori']; ?>">
-                            <label class="form-check-label" for="statusSwitch<?php echo $isi['id_kategori']; ?>">
-                                <?php echo $isi['status'] ? 'Aktif' : 'Nonaktif'; ?>
-                            </label>
-                        </div>
-                        </td> -->
                     </tr>
                 <?php $no++;
                 } ?>

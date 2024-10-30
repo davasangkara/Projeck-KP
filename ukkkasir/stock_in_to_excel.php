@@ -23,7 +23,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-$headers = ['No', 'Nama Barang', 'Qty', 'Price', 'Date'];
+$headers = ['No', 'Nama Barang', 'Stok', 'Harga Beli', 'Harga Jual'];
 foreach (range('A', 'E') as $index => $column) {
     $sheet->setCellValue($column . '1', $headers[$index]);
 }
@@ -61,9 +61,9 @@ $row = 2;
 foreach ($hasil as $index => $isi) {
     $sheet->setCellValue('A' . $row, $index + 1);
     $sheet->setCellValue('B' . $row, $isi['nama_barang']);
-    $sheet->setCellValue('C' . $row, $isi['qty']);
-    $sheet->setCellValue('D' . $row, $isi['price']);
-    $sheet->setCellValue('E' . $row, $isi['transaction_date']);
+    $sheet->setCellValue('C' . $row, $isi['stok']);
+    $sheet->setCellValue('D' . $row, $isi['harga_beli']);
+    $sheet->setCellValue('E' . $row, $isi['harga_jual']);
     $row++;
 }
 
@@ -78,7 +78,7 @@ $borderStyle = [
 $sheet->getStyle($dataRange)->applyFromArray($borderStyle);
 
 $writer = new Xlsx($spreadsheet);
-$filename = 'Barang_Masuk_Report.xlsx';
+$filename = 'report_transaksi_masuk.xlsx';
 
 $tempFile = tempnam(sys_get_temp_dir(), 'excel');
 $writer->save($tempFile);
