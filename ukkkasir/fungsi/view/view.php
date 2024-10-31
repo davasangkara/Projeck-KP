@@ -101,21 +101,38 @@ class view
         return $hasil;
     }
 
+    // public function barang_cari($cari)
+    // {
+    //     $sql = "select barang.*, 
+    //             kategori.id_kategori, 
+    //             kategori.nama_kategori,
+    //             units.id as unit_id,
+    //             units.name as unit_name
+    //             from barang 
+    //             inner join kategori on barang.id_kategori = kategori.id_kategori
+    //             inner join units on barang.unit_id = units.id
+    //             where id_barang like '%$cari%' or nama_barang like '%$cari%' or merk like '%$cari%'";
+    //     $row = $this->db->prepare($sql);
+    //     $row->execute();
+    //     $hasil = $row->fetchAll();
+    //     return $hasil;
+    // }
+
     public function barang_cari($cari)
     {
-        $sql = "select barang.*, 
-                kategori.id_kategori, 
-                kategori.nama_kategori,
-                units.id as unit_id,
-                units.name as unit_name
-                from barang 
-                inner join kategori on barang.id_kategori = kategori.id_kategori
-                inner join units on barang.unit_id = units.id
-                where id_barang like '%$cari%' or nama_barang like '%$cari%' or merk like '%$cari%'";
+        $sql = "SELECT transaksi.*, 
+                barang.id,
+                barang.merk,
+                barang.nama_barang 
+        FROM transaksi
+        INNER JOIN barang ON transaksi.barang_id = barang.id
+        WHERE barang.nama_barang LIKE ? OR barang.merk LIKE ?";
+
         $row = $this->db->prepare($sql);
-        $row->execute();
-        $hasil = $row->fetchAll();
-        return $hasil;
+        $row->execute(["%$cari%", "%$cari%"]);
+        $hasil1 = $row->fetchAll();
+
+        return $hasil1;
     }
 
     public function barang_id()
@@ -246,9 +263,11 @@ class view
 
     public function penjualan()
     {
-        $sql = "SELECT penjualan.* , barang.id_barang, barang.nama_barang, member.id_member,
+        $sql = "SELECT penjualan.* ,
+                barang.id, 
+                barang.nama_barang, member.id_member,
                 member.nm_member from penjualan 
-                left join barang on barang.id_barang=penjualan.id_barang 
+                left join barang on barang.id=penjualan.barang_id 
                 left join member on member.id_member=penjualan.id_member
                 ORDER BY id_penjualan";
         $row = $this->db->prepare($sql);
@@ -298,13 +317,51 @@ class view
 
     public function getAllTransactionStockIn()
     {
-        $sql = "select transactions.*,
+        $sql = "select stok_transactions.*,
                 barang.nama_barang
-                from transactions 
-                inner join barang on transactions.barang_id = barang.id
-                where transactions.type like 'IN'
+                from stok_transactions 
+                inner join barang on stok_transactions.barang_id = barang.id
+                where stok_transactions.type like 'IN'
                 ";
         $row = $this->db->prepare($sql);
+        $row->execute();
+
+        $hasil = $row->fetchAll(PDO::FETCH_ASSOC);
+
+        return $hasil;
+    }
+
+    public function getBarangStockTransaction()
+    {
+        $sql = "select transaksi.* ,
+                barang.nama_barang
+                from transaksi
+                inner join barang on transaksi.barang_id = barang.id
+        ";
+
+        $row = $this->db->prepare($sql);
+
+        $row->execute();
+
+        $hasil = $row->fetchAll(PDO::FETCH_ASSOC);
+
+        return $hasil;
+    }
+
+    public function getAllMasterBarang()
+    {
+        $sql = "select barang.*,
+                kategori.id_kategori,
+                kategori.nama_kategori,
+                units.id as unit_id,
+                units.name as unit_name
+                from barang 
+                inner join kategori on barang.id_kategori = kategori.id_kategori
+                inner join units on barang.unit_id = units.id
+        ";
+
+        $row = $this->db->prepare($sql);
+
         $row->execute();
 
         $hasil = $row->fetchAll(PDO::FETCH_ASSOC);

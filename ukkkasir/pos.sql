@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               8.0.30 - MySQL Community Server - GPL
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.6.0.6765
+-- HeidiSQL Version:             12.8.0.6908
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -22,42 +22,36 @@ USE `pos`;
 -- Dumping structure for table pos.barang
 CREATE TABLE IF NOT EXISTS `barang` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_barang` varchar(255) NOT NULL,
   `id_kategori` int NOT NULL,
   `nama_barang` text NOT NULL,
   `merk` varchar(255) NOT NULL,
-  `harga_beli` varchar(255) NOT NULL,
-  `harga_jual` varchar(255) NOT NULL,
   `unit_id` int unsigned NOT NULL,
-  `stok` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `barang(fk)kategori` (`id_kategori`),
   KEY `barang(fk)unit` (`unit_id`),
   CONSTRAINT `barang(fk)kategori` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`),
   CONSTRAINT `barang(fk)unit` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
--- Dumping data for table pos.barang: ~6 rows (approximately)
-INSERT INTO `barang` (`id`, `id_barang`, `id_kategori`, `nama_barang`, `merk`, `harga_beli`, `harga_jual`, `unit_id`, `stok`) VALUES
-	(7, 'BR002', 14, 'Serena Monde', 'arta boga', '2000', '2500', 1, '976'),
-	(8, 'BR003', 15, 'Teh Pucuk 350ml', 'Mayora', '2500', '3000', 1, '988'),
-	(9, 'BR004', 15, 'Javana 350ML', 'Mayora', '2600', '3000', 4, '376'),
-	(12, '', 14, 'Bebelac', '11', '11', '11', 1, '1'),
-	(13, '', 14, 'Ayam', '1111', '111', '111', 1, '111'),
-	(14, 'BR001', 14, 'Bebek', '11', '11', '11', 1, '11');
+-- Dumping data for table pos.barang: ~3 rows (approximately)
+INSERT INTO `barang` (`id`, `id_kategori`, `nama_barang`, `merk`, `unit_id`) VALUES
+	(15, 20, 'Potato Chips', 'Lays', 1),
+	(16, 20, 'Chips Ahoy', 'Ahoy', 1),
+	(17, 21, 'Es Teh', 'Pucuk ', 4);
 
 -- Dumping structure for table pos.kategori
 CREATE TABLE IF NOT EXISTS `kategori` (
   `id_kategori` int NOT NULL AUTO_INCREMENT,
   `nama_kategori` varchar(255) NOT NULL,
   `tgl_input` varchar(255) NOT NULL,
+  `status` bigint DEFAULT NULL,
   PRIMARY KEY (`id_kategori`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
--- Dumping data for table pos.kategori: ~2 rows (approximately)
-INSERT INTO `kategori` (`id_kategori`, `nama_kategori`, `tgl_input`) VALUES
-	(14, 'Makanan', '28 January 2024, 12:44'),
-	(15, 'Minuman', '28 January 2024, 12:44');
+-- Dumping data for table pos.kategori: ~1 rows (approximately)
+INSERT INTO `kategori` (`id_kategori`, `nama_kategori`, `tgl_input`, `status`) VALUES
+	(20, 'Makanan', '30 October 2024, 7:18', 1),
+	(21, 'Minuman', '30 October 2024, 16:59', NULL);
 
 -- Dumping structure for table pos.login
 CREATE TABLE IF NOT EXISTS `login` (
@@ -70,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   CONSTRAINT `login_ibfk_1` FOREIGN KEY (`id_member`) REFERENCES `member` (`id_member`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- Dumping data for table pos.login: ~0 rows (approximately)
+-- Dumping data for table pos.login: ~4 rows (approximately)
 INSERT INTO `login` (`id_login`, `user`, `pass`, `id_member`) VALUES
 	(1, 'admin12345', '21232f297a57a5a743894a0e4a801fc3', 1),
 	(3, 'putra', '5e0c5a0bf82decdd43b2150b622c66c5', 3),
@@ -99,39 +93,49 @@ INSERT INTO `member` (`id_member`, `nm_member`, `alamat_member`, `telepon`, `ema
 -- Dumping structure for table pos.nota
 CREATE TABLE IF NOT EXISTS `nota` (
   `id_nota` int NOT NULL AUTO_INCREMENT,
-  `id_barang` varchar(255) NOT NULL,
+  `nama_barang` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `id_member` int NOT NULL,
   `jumlah` varchar(255) NOT NULL,
   `total` varchar(255) NOT NULL,
   `tanggal_input` varchar(255) NOT NULL,
   `periode` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_nota`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table pos.nota: ~0 rows (approximately)
-INSERT INTO `nota` (`id_nota`, `id_barang`, `id_member`, `jumlah`, `total`, `tanggal_input`, `periode`) VALUES
-	(4, 'BR004', 6, '24', '72000', '28 January 2024, 12:49', '01-2024'),
-	(5, 'BR001', 6, '24', '120000', '28 January 2024, 12:49', '01-2024'),
-	(6, 'BR003', 6, '12', '36000', '28 January 2024, 12:50', '01-2024'),
-	(7, 'BR002', 6, '24', '60000', '28 January 2024, 12:50', '01-2024'),
-	(8, 'BR004', 1, '100', '300000', '6 October 2024, 23:12', '10-2024');
 
 -- Dumping structure for table pos.penjualan
 CREATE TABLE IF NOT EXISTS `penjualan` (
   `id_penjualan` int NOT NULL AUTO_INCREMENT,
-  `id_barang` varchar(255) NOT NULL,
+  `barang_id` int NOT NULL,
   `id_member` int NOT NULL,
-  `jumlah` varchar(255) NOT NULL,
-  `total` varchar(255) NOT NULL,
+  `jumlah` int NOT NULL,
+  `total` int NOT NULL DEFAULT (0),
   `tanggal_input` varchar(255) NOT NULL,
   PRIMARY KEY (`id_penjualan`),
   KEY `id_member` (`id_member`),
   CONSTRAINT `penjualan_ibfk_1` FOREIGN KEY (`id_member`) REFERENCES `member` (`id_member`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table pos.penjualan: ~1 rows (approximately)
-INSERT INTO `penjualan` (`id_penjualan`, `id_barang`, `id_member`, `jumlah`, `total`, `tanggal_input`) VALUES
-	(7, 'BR004', 1, '100', '300000', '6 October 2024, 23:12');
+
+-- Dumping structure for table pos.stok_transactions
+CREATE TABLE IF NOT EXISTS `stok_transactions` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `type` enum('IN','OUT') NOT NULL,
+  `harga_beli` int NOT NULL,
+  `harga_jual` int NOT NULL,
+  `stok` int NOT NULL,
+  `barang_id` int NOT NULL,
+  `transaction_date` timestamp NULL DEFAULT (now()),
+  PRIMARY KEY (`id`),
+  KEY `barang_id(fk)barang` (`barang_id`),
+  CONSTRAINT `barang_id(fk)barang` FOREIGN KEY (`barang_id`) REFERENCES `barang` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='tabel stock barang';
+
+-- Dumping data for table pos.stok_transactions: ~1 rows (approximately)
+INSERT INTO `stok_transactions` (`id`, `type`, `harga_beli`, `harga_jual`, `stok`, `barang_id`, `transaction_date`) VALUES
+	(2, 'IN', 25000, 27000, 20, 15, '2024-10-30 12:11:29');
 
 -- Dumping structure for table pos.toko
 CREATE TABLE IF NOT EXISTS `toko` (
@@ -143,28 +147,26 @@ CREATE TABLE IF NOT EXISTS `toko` (
   PRIMARY KEY (`id_toko`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table pos.toko: ~0 rows (approximately)
+-- Dumping data for table pos.toko: ~1 rows (approximately)
 INSERT INTO `toko` (`id_toko`, `nama_toko`, `alamat_toko`, `tlp`, `nama_pemilik`) VALUES
 	(1, 'CV Barokah Abadi', 'Bandung', '08888888888', 'Bapak Berkah');
 
--- Dumping structure for table pos.transactions
-CREATE TABLE IF NOT EXISTS `transactions` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+-- Dumping structure for table pos.transaksi
+CREATE TABLE IF NOT EXISTS `transaksi` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `type` enum('IN','OUT') NOT NULL,
+  `harga_beli` bigint NOT NULL DEFAULT (0),
+  `harga_jual` bigint NOT NULL DEFAULT (0),
+  `stok` int NOT NULL,
   `barang_id` int NOT NULL,
-  `qty` int NOT NULL,
-  `price` float NOT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `transaction_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `trxfkbarang_id` (`barang_id`),
-  CONSTRAINT `trxfkbarang_id` FOREIGN KEY (`barang_id`) REFERENCES `barang` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='catat semua transaksi\r\n';
+  KEY `transaksi(fk)barang` (`barang_id`),
+  CONSTRAINT `transaksi(fk)barang` FOREIGN KEY (`barang_id`) REFERENCES `barang` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='tabel transaksi nyatat stok dari barang';
 
--- Dumping data for table pos.transactions: ~3 rows (approximately)
-INSERT INTO `transactions` (`id`, `barang_id`, `qty`, `price`, `type`, `transaction_date`) VALUES
-	(1, 12, 1, 11, 'IN', '2024-10-06 23:43:49'),
-	(2, 13, 111, 111, 'IN', '2024-10-06 23:44:38'),
-	(3, 14, 11, 11, 'OUT', '2024-10-06 23:45:05');
+-- Dumping data for table pos.transaksi: ~1 rows (approximately)
+INSERT INTO `transaksi` (`id`, `type`, `harga_beli`, `harga_jual`, `stok`, `barang_id`) VALUES
+	(1, 'IN', 25000, 27000, 20, 15);
 
 -- Dumping structure for table pos.units
 CREATE TABLE IF NOT EXISTS `units` (
@@ -174,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `units` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='master units, unit name and desc';
 
--- Dumping data for table pos.units: ~0 rows (approximately)
+-- Dumping data for table pos.units: ~5 rows (approximately)
 INSERT INTO `units` (`id`, `name`, `description`) VALUES
 	(1, 'pcs', 'unit satuan per-pcs'),
 	(2, 'L', 'unit satuan liter'),

@@ -15,33 +15,31 @@ if (!empty($_SESSION['admin'])) {
     }
 
     if (!empty($_GET['barang'])) {
+
+        // fungsi simpan data master barang
         try {
             $config->beginTransaction();
 
-            $idBarang = htmlentities($_POST['id_barang']);
+            // $idBarang = htmlentities($_POST['id_barang']);
             $idKategori = htmlentities($_POST['kategori']);
             $nama = htmlentities($_POST['nama']);
             $merk = htmlentities($_POST['merk']);
-            $beli = htmlentities($_POST['beli']);
-            $jual = htmlentities($_POST['jual']);
-            $stok = htmlentities($_POST['stok']);
+            // $beli = htmlentities($_POST['beli']);
+            // $jual = htmlentities($_POST['jual']);
+            // $stok = htmlentities($_POST['stok']);
             $unitId = htmlentities($_POST['unit_id']);
-            $price = htmlentities($_POST['beli']);
-            $value = htmlentities($_POST['stok']);
+            // $price = htmlentities($_POST['beli']);
+            // $value = htmlentities($_POST['stok']);
 
             $dataBarang = [
-                $idBarang,
                 $idKategori,
                 $nama,
                 $merk,
-                $beli,
-                $jual,
                 $unitId,
-                $stok
             ];
 
-            $sql = 'INSERT INTO barang (id_barang, id_kategori,nama_barang, merk, harga_beli, harga_jual, unit_id,stok) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'INSERT INTO barang (id_kategori,nama_barang, merk,unit_id) 
+                    VALUES (?, ?, ?, ?)';
 
             $barangStmt = $config->prepare($sql);
 
@@ -49,18 +47,18 @@ if (!empty($_SESSION['admin'])) {
                 throw new Exception("Gagal memasukkan data barang.");
             }
 
-            $barangId = $config->lastInsertId();
+            // $barangId = $config->lastInsertId();
 
-            $stockInSql = 'INSERT INTO transactions (barang_id, price, qty, type,transaction_date) 
-                           VALUES (?, ?, ?, "IN",NOW())';
+            // $stockInSql = 'INSERT INTO transactions (barang_id, price, qty, type,transaction_date) 
+            //                VALUES (?, ?, ?, "IN",NOW())';
 
-            $stockInStmt = $config->prepare($stockInSql);
+            // $stockInStmt = $config->prepare($stockInSql);
 
-            $dataStockIn = [$barangId, $price, $stok];
+            // $dataStockIn = [$barangId, $price, $stok];
 
-            if (!$stockInStmt->execute($dataStockIn)) {
-                throw new Exception("Gagal memasukkan data stock_in.");
-            }
+            // if (!$stockInStmt->execute($dataStockIn)) {
+            //     throw new Exception("Gagal memasukkan data stock_in.");
+            // }
 
             $config->commit();
             echo '<script>window.location="../../index.php?page=barang&success=tambah-data"</script>';
@@ -73,35 +71,132 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
+    if (!empty($_GET['master_barang'])) {
+
+        try {
+            $config->beginTransaction();
+
+            $idKategori = htmlentities($_POST['kategori']);
+            $nama = htmlentities($_POST['nama']);
+            $merk = htmlentities($_POST['merk']);
+            $unitId = htmlentities($_POST['unit_id']);
+
+            $dataBarang = [
+                $idKategori,
+                $nama,
+                $merk,
+                $unitId,
+            ];
+
+            $transactionSql = 'INSERT INTO barang (id_kategori,nama_barang, merk,unit_id) 
+                    VALUES (?, ?, ?, ?)';
+
+            $barangStmt = $config->prepare($sql);
+
+            if (!$barangStmt->execute($dataBarang)) {
+                throw new Exception("Gagal memasukkan data barang.");
+            }
+
+            $config->commit();
+            echo '<script>window.location="../../index.php?page=master_barang&success=tambah-data"</script>';
+        } catch (PDOException $e) {
+            $config->rollBack();
+            echo 'Kesalahan Database: ' . $e->getMessage();
+        } catch (Exception $e) {
+            $config->rollBack();
+            echo 'Kesalahan: ' . $e->getMessage();
+        }
+    }
+
+
+    if (!empty($_GET['stock'])) {
+        try {
+            $config->beginTransaction();
+
+            $idBarang = htmlentities($_POST['barang']);
+            $hargaBeli = htmlentities($_POST['harga_beli']);
+            $hargaJual = htmlentities($_POST['harga_jual']);
+            $stok = htmlentities($_POST['stok']);
+
+            $cekSql = 'SELECT * FROM transaksi WHERE barang_id = ? AND type = "IN" LIMIT 1';
+            $cekStmt = $config->prepare($cekSql);
+            $cekStmt->execute([$idBarang]);
+            $existingData = $cekStmt->fetch();
+
+            if ($existingData) {
+                $updateSql = 'UPDATE transaksi SET 
+                              harga_beli = ?, harga_jual = ?, stok = stok + ? 
+                              WHERE barang_id = ? AND type = "IN"';
+                $updateStmt = $config->prepare($updateSql);
+
+                if (!$updateStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                    throw new Exception("Gagal memperbarui stok!");
+                }
+            } else {
+                $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id) 
+                              VALUES ("IN", ?, ?, ?, ?)';
+                $insertStmt = $config->prepare($insertSql);
+
+                if (!$insertStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                    throw new Exception("Gagal menambah stok!");
+                }
+            }
+
+            $transaksiStockSql = 'INSERT INTO stok_transactions (type, harga_beli, harga_jual, stok, barang_id, transaction_date)
+                                  VALUES("IN", ?, ?, ?, ?, NOW())';
+            $transactionStockStmt = $config->prepare($transaksiStockSql);
+
+            if (!$transactionStockStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                throw new Exception("Gagal mencatat transaksi stok!");
+            }
+
+            $config->commit();
+            echo '<script>window.location="../../index.php?page=stock&success=tambah-data"</script>';
+        } catch (PDOException $e) {
+            $config->rollBack();
+            echo 'Kesalahan Database: ' . $e->getMessage();
+        } catch (Exception $e) {
+            $config->rollBack();
+            echo 'Kesalahan: ' . $e->getMessage();
+        }
+    }
+
+
     if (!empty($_GET['jual'])) {
         $id = $_GET['id'];
 
-        // get tabel barang id_barang
-        $sql = 'SELECT * FROM barang WHERE id_barang = ?';
-        $row = $config->prepare($sql);
-        $row->execute(array($id));
-        $hsl = $row->fetch();
+        try {
+            $sql = 'SELECT * FROM transaksi WHERE barang_id = ?';
+            $row = $config->prepare($sql);
+            $row->execute([$id]);
+            $hsl = $row->fetch(PDO::FETCH_ASSOC);
 
-        if ($hsl['stok'] > 0) {
-            $kasir =  $_GET['id_kasir'];
-            $jumlah = 1;
-            $total = $hsl['harga_jual'];
-            $tgl = date("j F Y, G:i");
+            if ($hsl['stok'] > 0) {
+                $kasir = $_GET['id_kasir'];
+                $jumlah = 1;
+                $total = $hsl['harga_jual'];
+                $tgl = date("j F Y, G:i");
 
-            $data1[] = $id;
-            $data1[] = $kasir;
-            $data1[] = $jumlah;
-            $data1[] = $total;
-            $data1[] = $tgl;
+                $data1 = [
+                    $id,
+                    $kasir,
+                    $jumlah,
+                    $total,
+                    $tgl
+                ];
 
-            $sql1 = 'INSERT INTO penjualan (id_barang,id_member,jumlah,total,tanggal_input) VALUES (?,?,?,?,?)';
-            $row1 = $config->prepare($sql1);
-            $row1->execute($data1);
+                $sql1 = 'INSERT INTO penjualan (barang_id, id_member, jumlah, total, tanggal_input) VALUES (?, ?, ?, ?, ?)';
+                $row1 = $config->prepare($sql1);
+                $row1->execute($data1);
 
-            echo '<script>window.location="../../index.php?page=jual&success=tambah-data"</script>';
-        } else {
-            echo '<script>alert("Stok Barang Anda Telah Habis !");
-					window.location="../../index.php?page=jual#keranjang"</script>';
+                echo '<script>window.location="../../index.php?page=jual&success=tambah-data"</script>';
+            } else {
+                echo '<script>alert("Stok Barang Anda Telah Habis !");
+                      window.location="../../index.php?page=jual#keranjang"</script>';
+            }
+        } catch (PDOException $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");
+                  window.location="../../index.php?page=jual"</script>';
         }
     }
 }

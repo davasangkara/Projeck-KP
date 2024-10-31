@@ -76,13 +76,13 @@
                                 <td><?php echo $isi['nama_kategori']; ?></td>
                                 <td><?php echo $isi['nama_barang']; ?></td>
                                 <td><?php echo $isi['merk']; ?></td>
-                                <td>
+                                <!-- <td>
                                     <?php if ($isi['stok'] == '0') { ?>
                                         <button class="btn btn-danger"> Habis</button>
                                     <?php } else { ?>
                                         <?php echo $isi['stok']; ?>
                                     <?php } ?>
-                                </td>
+                                </td> -->
                                 <td>Rp.<?php echo number_format($isi['harga_beli']); ?>,-</td>
                                 <td>Rp.<?php echo number_format($isi['harga_jual']); ?>,-</td>
                                 <td> <?php echo $isi['unit_name']; ?></td>

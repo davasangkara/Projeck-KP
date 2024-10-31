@@ -4,6 +4,7 @@
       MAIN CONTENT
       *********************************************************************************************************************************************************** -->
  <!--main content start-->
+
  <?php
 	$id = $_SESSION['admin']['id_member'];
 	$hasil = $lihat->member_edit($id);
@@ -29,7 +30,8 @@
  				<h5><i class="fa fa-search"></i> Cari Barang</h5>
  			</div>
  			<div class="card-body">
- 				<input type="text" id="cari" class="form-control" name="cari" placeholder="Masukan : Kode / Nama Barang  [ENTER]">
+ 				<input type="text" id="cari" class="form-control" name="cari"
+ 					placeholder="Masukan : Kode / Nama Barang  [ENTER]">
  			</div>
  		</div>
  	</div>
@@ -47,13 +49,55 @@
  		</div>
  	</div>
 
+ 	<script>
+ 		$(document).ready(function() {
+
+ 			let timeout;
+
+ 			$("#cari").on("keyup", function() {
+ 				var keyword = $(this).val();
+
+ 				clearTimeout(timeout);
+
+ 				if (keyword.length > 0) {
+ 					timeout = setTimeout(function() {
+ 						$.ajax({
+ 							type: "POST",
+ 							url: "fungsi/edit/edit.php?cari_barang=yes",
+ 							data: {
+ 								keyword: keyword
+ 							},
+ 							beforeSend: function() {
+ 								$("#hasil_cari").hide();
+ 								$("#tunggu").html(
+ 									'<p style="color:green"><blink>tunggu sebentar</blink></p>'
+ 								);
+ 							},
+ 							success: function(html) {
+ 								$("#tunggu").html('');
+ 								$("#hasil_cari").show();
+ 								$("#hasil_cari").html(html);
+ 							}
+ 						});
+ 					}, 1500);
+ 				} else {
+ 					$("#hasil_cari").hide();
+ 				}
+ 			});
+ 		});
+ 	</script>
+
+
+
+ 	<!---Kasir dimulai dari sini-->
 
  	<div class="col-sm-12">
  		<div class="card card-primary">
  			<div class="card-header bg-primary text-white">
  				<h5><i class="fa fa-shopping-cart"></i> KASIR
  					<a class="btn btn-danger float-right"
- 						onclick="javascript:return confirm('Apakah anda ingin reset keranjang ?');" href="fungsi/hapus/hapus.php?penjualan=jual">
+ 						onclick="javascript:return confirm('Apakah anda ingin reset keranjang ?');"
+ 						href="fungsi/hapus/hapus.php?penjualan=jual">
  						<b>RESET KERANJANG</b></a>
  				</h5>
  			</div>
@@ -62,7 +106,8 @@
  					<table class="table table-bordered">
  						<tr>
  							<td><b>Tanggal</b></td>
- 							<td><input type="text" readonly="readonly" class="form-control" value="<?php echo date("j F Y, G:i"); ?>" name="tgl"></td>
+ 							<td><input type="text" readonly="readonly" class="form-control"
+ 									value="<?php echo date("j F Y, G:i"); ?>" name="tgl"></td>
  						</tr>
  					</table>
  					<table class="table table-bordered w-100" id="example1">
@@ -77,7 +122,8 @@
  							</tr>
  						</thead>
  						<tbody>
- 							<?php $total_bayar = 0;
+ 							<?php
+								$total_bayar = 0;
 								$no = 1;
 								$hasil_penjualan = $lihat->penjualan(); ?>
  							<?php foreach ($hasil_penjualan  as $isi) { ?>
@@ -85,19 +131,21 @@
  									<td><?php echo $no; ?></td>
  									<td><?php echo $isi['nama_barang']; ?></td>
  									<td>
- 										<!-- aksi ke table penjualan -->
+
  										<form method="POST" action="fungsi/edit/edit.php?jual=jual">
- 											<input type="number" name="jumlah" value="<?php echo $isi['jumlah']; ?>" class="form-control">
- 											<input type="hidden" name="id" value="<?php echo $isi['id_penjualan']; ?>" class="form-control">
- 											<input type="hidden" name="id_barang" value="<?php echo $isi['id_barang']; ?>" class="form-control">
+ 											<input type="number" name="jumlah" value="<?php echo $isi['jumlah']; ?>"
+ 												class="form-control">
+ 											<input type="hidden" name="id" value="<?php echo $isi['id_penjualan']; ?>"
+ 												class="form-control">
+ 											<input type="hidden" name="barang_id" value="<?php echo $isi['barang_id']; ?>"
+ 												class="form-control">
  									</td>
  									<td>Rp.<?php echo number_format($isi['total']); ?>,-</td>
  									<td><?php echo $isi['nm_member']; ?></td>
  									<td>
  										<button type="submit" class="btn btn-warning">Update</button>
  										</form>
- 										<!-- aksi ke table penjualan -->
- 										<a href="fungsi/hapus/hapus.php?jual=jual&id=<?php echo $isi['id_penjualan']; ?>&brg=<?php echo $isi['id_barang']; ?>
+ 										<a href="fungsi/hapus/hapus.php?jual=jual&id=<?php echo $isi['id_penjualan']; ?>&brg=<?php echo $isi['barang_id']; ?>
 											&jml=<?php echo $isi['jumlah']; ?>" class="btn btn-danger"><i class="fa fa-times"></i>
  										</a>
  									</td>
@@ -112,54 +160,87 @@
  					<div id="kasirnya">
  						<table class="table table-stripped">
  							<?php
-								// proses bayar dan ke nota
-								if (!empty($_GET['nota'] == 'yes')) {
-									$total = $_POST['total'];
-									$bayar = $_POST['bayar'];
-									if (!empty($bayar)) {
-										$hitung = $bayar - $total;
-										if ($bayar >= $total) {
-											$id_barang = $_POST['id_barang'];
-											$id_member = $_POST['id_member'];
-											$jumlah = $_POST['jumlah'];
-											$total = $_POST['total1'];
-											$tgl_input = $_POST['tgl_input'];
-											$periode = $_POST['periode'];
-											$jumlah_dipilih = count($id_barang);
+								try {
+									if (!empty($_GET['nota'] == 'yes')) {
+										try {
+											$total = $_POST['total'];
+											$bayar = $_POST['bayar'];
 
-											for ($x = 0; $x < $jumlah_dipilih; $x++) {
+											if (!empty($bayar)) {
+												$hitung = $bayar - $total;
 
-												$d = array($id_barang[$x], $id_member[$x], $jumlah[$x], $total[$x], $tgl_input[$x], $periode[$x]);
-												$sql = "INSERT INTO nota (id_barang,id_member,jumlah,total,tanggal_input,periode) VALUES(?,?,?,?,?,?)";
-												$row = $config->prepare($sql);
-												$row->execute($d);
+												if ($bayar >= $total) {
+													try {
+														$nama_barang = $_POST['nama_barang'];
+														$barang_id = $_POST['barang_id'];
+														$id_member = $_POST['id_member'];
+														$jumlah = $_POST['jumlah'];
+														$total = $_POST['total1'];
+														$tgl_input = $_POST['tgl_input'];
+														$periode = $_POST['periode'];
+														$jumlah_dipilih = count($id_barang);
+														$config->beginTransaction();
 
-												// ubah stok barang
-												$sql_barang = "SELECT * FROM barang WHERE id_barang = ?";
-												$row_barang = $config->prepare($sql_barang);
-												$row_barang->execute(array($id_barang[$x]));
-												$hsl = $row_barang->fetch();
+														for ($x = 0; $x < $jumlah_dipilih; $x++) {
+															try {
+																$d = array($id_barang[$x], $id_member[$x], $jumlah[$x], $total[$x], $tgl_input[$x], $periode[$x]);
 
-												$stok = $hsl['stok'];
-												$idb  = $hsl['id_barang'];
+																$sql = "INSERT INTO nota (nama_barang,id_member,jumlah,total,tanggal_input,periode) VALUES(?,?,?,?,?,?)";
+																$row = $config->prepare($sql);
+																$row->execute($d);
 
-												$total_stok = $stok - $jumlah[$x];
-												// echo $total_stok;
-												$sql_stok = "UPDATE barang SET stok = ? WHERE id_barang = ?";
-												$row_stok = $config->prepare($sql_stok);
-												$row_stok->execute(array($total_stok, $idb));
+																$sql_barang = "SELECT * FROM transaksi WHERE barang_id = ?";
+																$row_barang = $config->prepare($sql_barang);
+																$row_barang->execute(array($id_barang[$x]));
+																$hsl = $row_barang->fetch();
+
+																if (!$hsl) {
+																	throw new Exception("Barang dengan ID {$id_barang[$x]} tidak ditemukan");
+																}
+
+																$stok = $hsl['stok'];
+																$idb  = $hsl['id_barang'];
+																$total_stok = $stok - $jumlah[$x];
+
+																if ($total_stok < 0) {
+																	throw new Exception("Stok tidak mencukupi untuk barang ID {$id_barang[$x]}");
+																}
+
+																$sql_stok = "UPDATE transaksi SET stok = ? WHERE barang_id = ?";
+																$row_stok = $config->prepare($sql_stok);
+																$row_stok->execute(array($total_stok, $idb));
+															} catch (PDOException $e) {
+																$config->rollBack();
+																throw new Exception("Error dalam transaksi database: " . $e->getMessage());
+															} catch (Exception $e) {
+																$config->rollBack();
+																throw new Exception($e->getMessage());
+															}
+														}
+
+														$config->commit();
+														echo '<script>alert("Belanjaan Berhasil Di Bayar !");</script>';
+													} catch (Exception $e) {
+														echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+													}
+												} else {
+													echo '<script>alert("Uang Kurang ! Rp.' . abs($hitung) . '");</script>';
+												}
 											}
-											echo '<script>alert("Belanjaan Berhasil Di Bayar !");</script>';
-										} else {
-											echo '<script>alert("Uang Kurang ! Rp.' . $hitung . '");</script>';
+										} catch (PDOException $e) {
+											echo '<script>alert("Error database: ' . $e->getMessage() . '");</script>';
+										} catch (Exception $e) {
+											echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
 										}
 									}
+								} catch (Exception $e) {
+									echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
 								}
 								?>
  							<!-- aksi ke table nota -->
  							<form method="POST" action="index.php?page=jual&nota=yes#kasirnya">
  								<?php foreach ($hasil_penjualan as $isi) {; ?>
- 									<input type="hidden" name="id_barang[]" value="<?php echo $isi['id_barang']; ?>">
+ 									<input type="hidden" name="nama_barang[]" value="<?php echo $isi['nama_barang']; ?>">
  									<input type="hidden" name="id_member[]" value="<?php echo $isi['id_member']; ?>">
  									<input type="hidden" name="jumlah[]" value="<?php echo $isi['jumlah']; ?>">
  									<input type="hidden" name="total1[]" value="<?php echo $isi['total']; ?>">
@@ -169,11 +250,17 @@
 									} ?>
  								<tr>
  									<td>Total Semua </td>
- 									<td><input type="text" class="form-control" name="total" value="<?php echo $total_bayar; ?>"></td>
+ 									<td><input type="text" class="form-control" name="total"
+ 											value="<?php echo $total_bayar; ?>"></td>
 
  									<td>Bayar </td>
- 									<td><input type="text" class="form-control" name="bayar" value="<?php echo $bayar; ?>"></td>
- 									<td><button class="btn btn-success"><i class="fa fa-shopping-cart"></i> Bayar</button>
+ 									<td><input type="text" class="form-control" name="bayar"
+ 											value="<?php echo $bayar; ?>"></td>
+ 									<td>
+
+ 										<button class="btn btn-success"><i class="fa fa-shopping-cart"></i>
+ 											Bayar
+ 										</button>
  										<?php if (!empty($_GET['nota'] == 'yes')) { ?>
  											<a class="btn btn-danger" href="fungsi/hapus/hapus.php?penjualan=jual">
  												<b>RESET</b></a>
@@ -201,29 +288,3 @@
  			</div>
  		</div>
  	</div>
-
-
- 	<script>
- 		$(document).ready(function() {
- 			console.log("hello! mom!");
-
- 			$("#cari").change(function() {
- 				$.ajax({
- 					type: "POST",
- 					url: "fungsi/edit/edit.php?cari_barang=yes",
- 					data: 'keyword=' + $(this).val(),
- 					beforeSend: function() {
- 						$("#hasil_cari").hide();
- 						$("#tunggu").html('<p style="color:green"><blink>tunggu sebentar</blink></p>');
- 					},
- 					success: function(html) {
- 						$("#tunggu").html('');
- 						$("#hasil_cari").show();
- 						$("#hasil_cari").html(html);
- 					}
- 				});
- 			});
-
- 		});
- 		//To select country name
- 	</script>

@@ -7,9 +7,9 @@
                 <tr style="background:#DFF0D8;color:#333;">
                     <th>No</th>
                     <th>Nama Barang</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Date</th>
+                    <th>Stok</th>
+                    <th>Harga Beli</th>
+                    <th>Harga Jual</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,9 +21,9 @@
                     <tr>
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_barang']; ?></td>
-                        <td><?php echo $isi['qty']; ?></td>
-                        <td><?php echo $isi['price']; ?></td>
-                        <td><?php echo $isi['transaction_date']; ?></td>
+                        <td><?php echo $isi['stok']; ?></td>
+                        <td><?php echo $isi['harga_beli']; ?></td>
+                        <td><?php echo $isi['harga_jual']; ?></td>
                     </tr>
                 <?php $no++;
                 } ?>
