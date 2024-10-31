@@ -14,65 +14,8 @@ if (!empty($_SESSION['admin'])) {
         echo '<script>window.location="../../index.php?page=kategori&&success=tambah-data"</script>';
     }
 
-    if (!empty($_GET['barang'])) {
-
-        // fungsi simpan data master barang
-        try {
-            $config->beginTransaction();
-
-            // $idBarang = htmlentities($_POST['id_barang']);
-            $idKategori = htmlentities($_POST['kategori']);
-            $nama = htmlentities($_POST['nama']);
-            $merk = htmlentities($_POST['merk']);
-            // $beli = htmlentities($_POST['beli']);
-            // $jual = htmlentities($_POST['jual']);
-            // $stok = htmlentities($_POST['stok']);
-            $unitId = htmlentities($_POST['unit_id']);
-            // $price = htmlentities($_POST['beli']);
-            // $value = htmlentities($_POST['stok']);
-
-            $dataBarang = [
-                $idKategori,
-                $nama,
-                $merk,
-                $unitId,
-            ];
-
-            $sql = 'INSERT INTO barang (id_kategori,nama_barang, merk,unit_id) 
-                    VALUES (?, ?, ?, ?)';
-
-            $barangStmt = $config->prepare($sql);
-
-            if (!$barangStmt->execute($dataBarang)) {
-                throw new Exception("Gagal memasukkan data barang.");
-            }
-
-            // $barangId = $config->lastInsertId();
-
-            // $stockInSql = 'INSERT INTO transactions (barang_id, price, qty, type,transaction_date) 
-            //                VALUES (?, ?, ?, "IN",NOW())';
-
-            // $stockInStmt = $config->prepare($stockInSql);
-
-            // $dataStockIn = [$barangId, $price, $stok];
-
-            // if (!$stockInStmt->execute($dataStockIn)) {
-            //     throw new Exception("Gagal memasukkan data stock_in.");
-            // }
-
-            $config->commit();
-            echo '<script>window.location="../../index.php?page=barang&success=tambah-data"</script>';
-        } catch (PDOException $e) {
-            $config->rollBack();
-            echo 'Kesalahan Database: ' . $e->getMessage();
-        } catch (Exception $e) {
-            $config->rollBack();
-            echo 'Kesalahan: ' . $e->getMessage();
-        }
-    }
 
     if (!empty($_GET['master_barang'])) {
-
         try {
             $config->beginTransaction();
 
@@ -80,18 +23,20 @@ if (!empty($_SESSION['admin'])) {
             $nama = htmlentities($_POST['nama']);
             $merk = htmlentities($_POST['merk']);
             $unitId = htmlentities($_POST['unit_id']);
+            $type = htmlentities($_POST['type']);
 
             $dataBarang = [
                 $idKategori,
                 $nama,
                 $merk,
                 $unitId,
+                $type
             ];
 
-            $transactionSql = 'INSERT INTO barang (id_kategori,nama_barang, merk,unit_id) 
-                    VALUES (?, ?, ?, ?)';
+            $transactionSql = 'INSERT INTO barang (id_kategori, nama_barang, merk, unit_id, type) 
+                               VALUES (?, ?, ?, ?, ?)';
 
-            $barangStmt = $config->prepare($sql);
+            $barangStmt = $config->prepare($transactionSql);
 
             if (!$barangStmt->execute($dataBarang)) {
                 throw new Exception("Gagal memasukkan data barang.");
@@ -107,6 +52,7 @@ if (!empty($_SESSION['admin'])) {
             echo 'Kesalahan: ' . $e->getMessage();
         }
     }
+
 
 
     if (!empty($_GET['stock'])) {
