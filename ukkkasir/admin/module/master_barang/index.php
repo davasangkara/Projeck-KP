@@ -1,10 +1,5 @@
 <h4>Data Barang</h4>
 <br />
-<?php if (isset($_GET['success-stok'])) { ?>
-    <div class="alert alert-success">
-        <p>Tambah Stok Berhasil !</p>
-    </div>
-<?php } ?>
 <?php if (isset($_GET['success'])) { ?>
     <div class="alert alert-success">
         <p>Tambah Data Berhasil !</p>
@@ -86,6 +81,11 @@
                             <td>Merk Barang</td>
                             <td><input type="text" placeholder="Merk Barang" required class="form-control"
                                     name="merk"></td>
+                        </tr>
+                        <tr>
+                            <td>Type</td>
+                            <td><input type="text" placeholder="Type" required class="form-control"
+                                    name="type"></td>
                         </tr>
                         <tr>
                             <td>Unit Barang</td>
