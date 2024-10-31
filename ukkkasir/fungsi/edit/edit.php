@@ -170,64 +170,87 @@ if (!empty($_SESSION['admin'])) {
 
     if (!empty($_GET['jual'])) {
         $id = htmlentities($_POST['id']);
-        $id_barang = htmlentities($_POST['id_barang']);
+        $id_barang = htmlentities($_POST['barang_id']);
         $jumlah = htmlentities($_POST['jumlah']);
 
-        $sql_tampil = "select *from barang where barang.id_barang=?";
-        $row_tampil = $config->prepare($sql_tampil);
-        $row_tampil->execute(array($id_barang));
-        $hasil = $row_tampil->fetch();
+        try {
+            $sql_tampil = "SELECT transaksi.*, 
+                                  barang.nama_barang,
+                                  barang.id 
+                           FROM transaksi 
+                           INNER JOIN barang ON transaksi.barang_id = barang.id 
+                           WHERE barang.id = ?";
 
-        if ($hasil['stok'] > $jumlah) {
-            $jual = $hasil['harga_jual'];
-            $total = $jual * $jumlah;
-            $data1[] = $jumlah;
-            $data1[] = $total;
-            $data1[] = $id;
-            $sql1 = 'UPDATE penjualan SET jumlah=?,total=? WHERE id_penjualan=?';
-            $row1 = $config->prepare($sql1);
-            $row1->execute($data1);
-            echo '<script>window.location="../../index.php?page=jual#keranjang"</script>';
-        } else {
-            echo '<script>alert("Keranjang Melebihi Stok Barang Anda !");
-					window.location="../../index.php?page=jual#keranjang"</script>';
+            $row_tampil = $config->prepare($sql_tampil);
+            $row_tampil->execute(array($id_barang));
+            $hasil = $row_tampil->fetch(PDO::FETCH_ASSOC);
+
+            if ($hasil['stok'] > $jumlah) {
+                $jual = $hasil['harga_jual'];
+                $total = $jual * $jumlah;
+                $data1 = [
+                    $jumlah,
+                    $total,
+                    $id
+                ];
+
+                $sql1 = 'UPDATE penjualan SET jumlah = ?, total = ? WHERE id_penjualan = ?';
+                $row1 = $config->prepare($sql1);
+                $row1->execute($data1);
+
+                echo '<script>window.location="../../index.php?page=jual#keranjang"</script>';
+            } else {
+                echo '<script>alert("Keranjang Melebihi Stok Barang Anda !");
+                      window.location="../../index.php?page=jual#keranjang"</script>';
+            }
+        } catch (PDOException $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");
+                  window.location="../../index.php?page=jual"</script>';
         }
     }
 
+
     if (!empty($_GET['cari_barang'])) {
         $cari = trim(strip_tags($_POST['keyword']));
-        if ($cari == '') {
-        } else {
-            $sql = "select barang.*, kategori.id_kategori, kategori.nama_kategori
-					from barang inner join kategori on barang.id_kategori = kategori.id_kategori
-					where barang.id_barang like '%$cari%' or barang.nama_barang like '%$cari%' or barang.merk like '%$cari%'";
+
+        if ($cari != '') {
+            $sql = "SELECT transaksi.*, 
+                    barang.id,
+                    barang.merk,
+                    barang.nama_barang 
+                    FROM transaksi
+                    INNER JOIN barang ON transaksi.barang_id = barang.id
+                    WHERE barang.nama_barang LIKE ? OR barang.merk LIKE ?";
+
             $row = $config->prepare($sql);
-            $row->execute();
+            $row->execute(["%$cari%", "%$cari%"]);
             $hasil1 = $row->fetchAll();
+
+            if (!empty($hasil1)) {
 ?>
-            <table class="table table-stripped" width="100%" id="example2">
-                <tr>
-                    <th>ID Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Merk</th>
-                    <th>Harga Jual</th>
-                    <th>Aksi</th>
-                </tr>
-                <?php foreach ($hasil1 as $hasil) { ?>
+                <table class="table table-stripped" width="100%" id="example2">
                     <tr>
-                        <td><?php echo $hasil['id_barang']; ?></td>
-                        <td><?php echo $hasil['nama_barang']; ?></td>
-                        <td><?php echo $hasil['merk']; ?></td>
-                        <td><?php echo $hasil['harga_jual']; ?></td>
-                        <td>
-                            <a href="fungsi/tambah/tambah.php?jual=jual&id=<?php echo $hasil['id_barang']; ?>&id_kasir=<?php echo $_SESSION['admin']['id_member']; ?>"
-                                class="btn btn-success">
-                                <i class="fa fa-shopping-cart"></i></a>
-                        </td>
+                        <th>Nama Barang</th>
+                        <th>Merk</th>
+                        <th>Harga Jual</th>
+                        <th>Aksi</th>
                     </tr>
-                <?php } ?>
-            </table>
+                    <?php foreach ($hasil1 as $hasil) { ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($hasil['nama_barang']); ?></td>
+                            <td><?php echo htmlspecialchars($hasil['merk']); ?></td>
+                            <td><?php echo htmlspecialchars($hasil['harga_jual']); ?></td>
+                            <td>
+                                <a href="fungsi/tambah/tambah.php?jual=jual&id=<?php echo $hasil['barang_id']; ?>&id_kasir=<?php echo $_SESSION['admin']['id_member']; ?>" class="btn btn-success">
+                                    <i class="fa fa-shopping-cart"></i></a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
 <?php
+            } else {
+                echo '<p>Tidak ada hasil yang ditemukan.</p>';
+            }
         }
     }
 }
