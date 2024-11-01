@@ -22,20 +22,6 @@ if (!empty($_SESSION['admin'])) {
     }
 
     if (!empty(htmlentities($_GET['jual']))) {
-        $dataI[] = htmlentities($_GET['brg']);
-        $sqlI = 'select*from barang where id_barang=?';
-        $rowI = $config->prepare($sqlI);
-        $rowI->execute($dataI);
-        $hasil = $rowI->fetch();
-
-        /*$jml = htmlentities($_GET['jml']) + $hasil['stok'];
-
-        $dataU[] = $jml;
-        $dataU[] = htmlentities($_GET['brg']);
-        $sqlU = 'UPDATE barang SET stok =? where id_barang=?';
-        $rowU = $config -> prepare($sqlU);
-        $rowU -> execute($dataU);*/
-
         $id = htmlentities($_GET['id']);
         $data[] = $id;
         $sql = 'DELETE FROM penjualan WHERE id_penjualan=?';

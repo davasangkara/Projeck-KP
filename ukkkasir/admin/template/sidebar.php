@@ -63,7 +63,7 @@ $hasil_profil = $lihat->member_edit($id);
             <div class="bg-white py-2 collapse-inner rounded">
                 <!-- <h6 class="collapse-header">Custom Components:</h6> -->
                 <a class="collapse-item" href="index.php?page=jual">Transaksi Jual</a>
-                <a class="collapse-item" href="index.php?page=laporan">Laporan Penjualan</a>
+                <!-- <a class="collapse-item" href="index.php?page=laporan">Laporan Penjualan</a> -->
                 <a class="collapse-item" href="index.php?page=stockin">Laporan Barang Masuk</a>
             </div>
         </div>

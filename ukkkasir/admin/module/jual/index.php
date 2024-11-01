@@ -48,47 +48,6 @@
  			</div>
  		</div>
  	</div>
-
- 	<script>
- 		$(document).ready(function() {
-
- 			let timeout;
-
- 			$("#cari").on("keyup", function() {
- 				var keyword = $(this).val();
-
- 				clearTimeout(timeout);
-
- 				if (keyword.length > 0) {
- 					timeout = setTimeout(function() {
- 						$.ajax({
- 							type: "POST",
- 							url: "fungsi/edit/edit.php?cari_barang=yes",
- 							data: {
- 								keyword: keyword
- 							},
- 							beforeSend: function() {
- 								$("#hasil_cari").hide();
- 								$("#tunggu").html(
- 									'<p style="color:green"><blink>tunggu sebentar</blink></p>'
- 								);
- 							},
- 							success: function(html) {
- 								$("#tunggu").html('');
- 								$("#hasil_cari").show();
- 								$("#hasil_cari").html(html);
- 							}
- 						});
- 					}, 1500);
- 				} else {
- 					$("#hasil_cari").hide();
- 				}
- 			});
- 		});
- 	</script>
-
-
-
  	<!---Kasir dimulai dari sini-->
 
  	<div class="col-sm-12">
@@ -116,7 +75,7 @@
  								<td> No</td>
  								<td> Nama Barang</td>
  								<td style="width:10%;"> Jumlah</td>
- 								<td style="width:20%;"> Total</td>
+ 								<td> Total</td>
  								<td> Kasir</td>
  								<td> Aksi</td>
  							</tr>
@@ -288,3 +247,41 @@
  			</div>
  		</div>
  	</div>
+
+ 	<script>
+ 		$(document).ready(function() {
+
+ 			let timeout;
+
+ 			$("#cari").on("keyup", function() {
+ 				var keyword = $(this).val();
+
+ 				clearTimeout(timeout);
+
+ 				if (keyword.length > 0) {
+ 					timeout = setTimeout(function() {
+ 						$.ajax({
+ 							type: "POST",
+ 							url: "fungsi/edit/edit.php?cari_barang=yes",
+ 							data: {
+ 								keyword: keyword
+ 							},
+ 							beforeSend: function() {
+ 								$("#hasil_cari").hide();
+ 								$("#tunggu").html(
+ 									'<p style="color:green"><blink>tunggu sebentar</blink></p>'
+ 								);
+ 							},
+ 							success: function(html) {
+ 								$("#tunggu").html('');
+ 								$("#hasil_cari").show();
+ 								$("#hasil_cari").html(html);
+ 							}
+ 						});
+ 					}, 1500);
+ 				} else {
+ 					$("#hasil_cari").hide();
+ 				}
+ 			});
+ 		});
+ 	</script>
