@@ -29,7 +29,6 @@
                     <th>Harga Beli</th>
                     <th>Harga Jual</th>
                     <th>Stok</th>
-                    <th>Type</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,7 +43,6 @@
                         <td><?php echo $isi['harga_beli']; ?></td>
                         <td><?php echo $isi['harga_jual']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>
-                        <td><?php echo $isi['type']; ?></td>
                     </tr>
                 <?php $no++;
                 } ?>
