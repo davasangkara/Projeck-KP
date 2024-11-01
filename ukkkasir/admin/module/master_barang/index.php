@@ -24,6 +24,7 @@
                     <th>Nama Barang</th>
                     <th>Merk</th>
                     <th>Satuan</th>
+                    <th>Tipe</th>
 
                 </tr>
             </thead>
@@ -39,6 +40,7 @@
                         <td><?php echo $isi['nama_barang']; ?></td>
                         <td><?php echo $isi['merk']; ?></td>
                         <td> <?php echo $isi['unit_name']; ?></td>
+                        <td> <?php echo $isi['type']; ?></td>
                     <?php
                 }
                     ?>

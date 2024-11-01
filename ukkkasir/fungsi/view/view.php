@@ -296,7 +296,7 @@ class view
 
     public function jml()
     {
-        $sql = "SELECT SUM(harga_beli*stok) as byr FROM barang";
+        $sql = "SELECT SUM(harga_beli*stok) as byr FROM transaksi";
         $row = $this->db->prepare($sql);
         $row->execute();
         $hasil = $row->fetch();
