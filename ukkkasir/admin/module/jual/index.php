@@ -74,6 +74,8 @@
  							<tr>
  								<td> No</td>
  								<td> Nama Barang</td>
+ 								<td> Merk </td>
+ 								<td> Type</td>
  								<td style="width:10%;"> Jumlah</td>
  								<td> Total</td>
  								<td> Kasir</td>
@@ -89,6 +91,8 @@
  								<tr>
  									<td><?php echo $no; ?></td>
  									<td><?php echo $isi['nama_barang']; ?></td>
+ 									<td><?php echo $isi['merk']; ?></td>
+ 									<td><?php echo $isi['type']; ?></td>
  									<td>
 
  										<form method="POST" action="fungsi/edit/edit.php?jual=jual">

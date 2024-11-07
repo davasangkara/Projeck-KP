@@ -265,7 +265,10 @@ class view
     {
         $sql = "SELECT penjualan.* ,
                 barang.id, 
-                barang.nama_barang, member.id_member,
+                barang.nama_barang, 
+                barang.type,
+                barang.merk,
+                member.id_member,
                 member.nm_member from penjualan 
                 left join barang on barang.id=penjualan.barang_id 
                 left join member on member.id_member=penjualan.id_member
