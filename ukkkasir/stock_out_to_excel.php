@@ -23,8 +23,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-$headers = ['No', 'Nama Barang', 'Stok', 'Harga Beli', 'Harga Jual', 'Transaction Date'];
-foreach (range('A', 'F') as $index => $column) {
+$headers = ['No', 'Nama Barang', 'Stok Keluar', 'Harga Jual', 'Transaction Date'];
+foreach (range('A', 'E') as $index => $column) {
     $sheet->setCellValue($column . '1', $headers[$index]);
 }
 
@@ -46,7 +46,7 @@ $headerStyle = [
 $sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
 $sheet->getRowDimension(1)->setRowHeight(30);
 
-foreach (range('A', 'F') as $column) {
+foreach (range('A', 'E') as $column) {
     $sheet->getColumnDimension($column)->setAutoSize(true);
 }
 
@@ -62,9 +62,8 @@ foreach ($hasil as $index => $isi) {
     $sheet->setCellValue('A' . $row, $index + 1);
     $sheet->setCellValue('B' . $row, $isi['nama_barang'] . '-' . $isi['barang_type']);
     $sheet->setCellValue('C' . $row, $isi['stok']);
-    $sheet->setCellValue('D' . $row, $isi['harga_beli']);
-    $sheet->setCellValue('E' . $row, $isi['harga_jual']);
-    $sheet->setCellValue('F' . $row, $isi['transaction_date']);
+    $sheet->setCellValue('D' . $row, $isi['harga_jual']);
+    $sheet->setCellValue('E' . $row, $isi['transaction_date']);
     $row++;
 }
 
@@ -79,7 +78,7 @@ $borderStyle = [
 $sheet->getStyle($dataRange)->applyFromArray($borderStyle);
 
 $writer = new Xlsx($spreadsheet);
-$filename = 'report_transaksi_masuk.xlsx';
+$filename = 'report_transaksi_keluar.xlsx';
 
 $tempFile = tempnam(sys_get_temp_dir(), 'excel');
 $writer->save($tempFile);
