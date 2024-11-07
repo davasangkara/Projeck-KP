@@ -318,7 +318,8 @@ class view
     public function getAllTransactionStockIn()
     {
         $sql = "select stok_transactions.*,
-                barang.nama_barang
+                barang.nama_barang,
+                barang.type as barang_type
                 from stok_transactions 
                 inner join barang on stok_transactions.barang_id = barang.id
                 where stok_transactions.type like 'IN'
@@ -334,7 +335,8 @@ class view
     public function getBarangStockTransaction()
     {
         $sql = "select transaksi.* ,
-                barang.nama_barang
+                barang.nama_barang,
+                barang.type as barang_type
                 from transaksi
                 inner join barang on transaksi.barang_id = barang.id
         ";
@@ -362,6 +364,23 @@ class view
 
         $row = $this->db->prepare($sql);
 
+        $row->execute();
+
+        $hasil = $row->fetchAll(PDO::FETCH_ASSOC);
+
+        return $hasil;
+    }
+
+    public function getAllTransactionStockOut()
+    {
+        $sql = "select stok_transactions.*,
+                barang.nama_barang,
+                barang.type as barang_type
+                from stok_transactions 
+                inner join barang on stok_transactions.barang_id = barang.id
+                where stok_transactions.type like 'OUT'
+                ";
+        $row = $this->db->prepare($sql);
         $row->execute();
 
         $hasil = $row->fetchAll(PDO::FETCH_ASSOC);

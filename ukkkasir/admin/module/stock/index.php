@@ -26,9 +26,11 @@
                 <tr>
                     <th>No.</th>
                     <th>Nama Barang</th>
+                    <th>Type Barang</th>
                     <th>Harga Beli</th>
                     <th>Harga Jual</th>
                     <th>Stok</th>
+                    <th>Tanggal Transaksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,9 +42,11 @@
                     <tr>
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_barang']; ?></td>
+                        <td><?php echo $isi['barang_type']; ?></td>
                         <td><?php echo $isi['harga_beli']; ?></td>
                         <td><?php echo $isi['harga_jual']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>
+                        <td><?php echo date("d F Y", strtotime($isi['created_at'])); ?></td>
                     </tr>
                 <?php $no++;
                 } ?>
@@ -63,14 +67,14 @@
                 <div class="modal-body">
                     <table class="table table-striped bordered">
                         <tr>
-                            <td>Barang</td>
+                            <td>Stock in barang</td>
                             <td>
                                 <select name="barang" class="form-control" required>
-                                    <option value="#">Pilih Barang</option>
+                                    <option value="#" disabled selected>Pilih Barang - Type</option>
                                     <?php $barang = $lihat->getAllMasterBarang();
                                     foreach ($barang as $isi) {     ?>
                                         <option value="<?php echo $isi['id']; ?>">
-                                            <?php echo $isi['nama_barang']; ?></option>
+                                            <?php echo $isi['nama_barang'] . " - " . $isi['type']; ?></option>
                                     <?php } ?>
                                 </select>
                             </td>

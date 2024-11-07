@@ -215,13 +215,14 @@ if (!empty($_SESSION['admin'])) {
 
         if ($cari != '') {
             $sql = "SELECT transaksi.*, 
-                    barang.id,
-                    barang.merk,
-                    barang.type as type_barang,
+                    barang.id AS barang_id, 
+                    barang.merk, 
+                    barang.type AS type_barang, 
                     barang.nama_barang 
                     FROM transaksi
                     INNER JOIN barang ON transaksi.barang_id = barang.id
-                    WHERE barang.nama_barang LIKE ? OR barang.merk LIKE ?";
+                    WHERE (barang.nama_barang LIKE ? OR barang.merk LIKE ?)
+                    AND transaksi.stok >= 0";
 
             $row = $config->prepare($sql);
             $row->execute(["%$cari%", "%$cari%"]);

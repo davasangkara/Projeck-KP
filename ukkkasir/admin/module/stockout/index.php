@@ -1,4 +1,4 @@
-<h4>Laporan Barang Masuk</h4>
+<h4>Laporan Barang Keluar</h4>
 
 <div class="card card-body">
     <div class="table-responsive">
@@ -8,15 +8,14 @@
                     <th>No</th>
                     <th>Nama Barang</th>
                     <th>Type Barang</th>
-                    <th>Stok Masuk</th>
-                    <th>Harga Beli</th>
+                    <th>Stok Keluar</th>
                     <th>Harga Jual</th>
                     <th>Tanggal Transaksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $hasil = $lihat->getAllTransactionStockIn();
+                $hasil = $lihat->getAllTransactionStockOut();
                 $no = 1;
                 foreach ($hasil as $isi) {
                 ?>
@@ -25,7 +24,6 @@
                         <td><?php echo $isi['nama_barang']; ?></td>
                         <td><?php echo $isi['barang_type']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>
-                        <td><?php echo $isi['harga_beli']; ?></td>
                         <td><?php echo $isi['harga_jual']; ?></td>
                         <td><?php echo date("d F Y", strtotime($isi['transaction_date'])); ?></td>
                     </tr>
@@ -33,7 +31,7 @@
                 } ?>
             </tbody>
         </table>
-        <a href="stock_in_to_excel.php" class="btn btn-info"><i class="fa fa-download"></i>
+        <a href="stock_out_to_excel.php" class="btn btn-info"><i class="fa fa-download"></i>
             Export to Excel</a>
 
     </div>

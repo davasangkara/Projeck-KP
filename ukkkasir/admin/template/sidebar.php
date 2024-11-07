@@ -65,6 +65,7 @@ $hasil_profil = $lihat->member_edit($id);
                 <a class="collapse-item" href="index.php?page=jual">Transaksi Jual</a>
                 <!-- <a class="collapse-item" href="index.php?page=laporan">Laporan Penjualan</a> -->
                 <a class="collapse-item" href="index.php?page=stockin">Laporan Barang Masuk</a>
+                <a class="collapse-item" href="index.php?page=stockout">Laporan Barang Keluar</a>
             </div>
         </div>
     </li>

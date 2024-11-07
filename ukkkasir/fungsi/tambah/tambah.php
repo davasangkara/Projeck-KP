@@ -79,8 +79,8 @@ if (!empty($_SESSION['admin'])) {
                     throw new Exception("Gagal memperbarui stok!");
                 }
             } else {
-                $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id) 
-                              VALUES ("IN", ?, ?, ?, ?)';
+                $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id, created_at) 
+                              VALUES ("IN", ?, ?, ?, ?, NOW())';
                 $insertStmt = $config->prepare($insertSql);
 
                 if (!$insertStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
