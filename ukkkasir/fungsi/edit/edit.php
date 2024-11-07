@@ -217,6 +217,7 @@ if (!empty($_SESSION['admin'])) {
             $sql = "SELECT transaksi.*, 
                     barang.id,
                     barang.merk,
+                    barang.type as type_barang,
                     barang.nama_barang 
                     FROM transaksi
                     INNER JOIN barang ON transaksi.barang_id = barang.id
@@ -232,6 +233,7 @@ if (!empty($_SESSION['admin'])) {
                     <tr>
                         <th>Nama Barang</th>
                         <th>Merk</th>
+                        <th>Type</th>
                         <th>Harga Jual</th>
                         <th>Aksi</th>
                     </tr>
@@ -239,6 +241,7 @@ if (!empty($_SESSION['admin'])) {
                         <tr>
                             <td><?php echo htmlspecialchars($hasil['nama_barang']); ?></td>
                             <td><?php echo htmlspecialchars($hasil['merk']); ?></td>
+                            <td><?php echo htmlspecialchars($hasil['type_barang']); ?></td>
                             <td><?php echo htmlspecialchars($hasil['harga_jual']); ?></td>
                             <td>
                                 <a href="fungsi/tambah/tambah.php?jual=jual&id=<?php echo $hasil['barang_id']; ?>&id_kasir=<?php echo $_SESSION['admin']['id_member']; ?>" class="btn btn-success">
