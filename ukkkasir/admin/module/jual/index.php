@@ -188,9 +188,6 @@
 
 														$config->commit();
 														echo '<script>alert("Belanjaan Berhasil Di Bayar!");</script>';
-
-														$truncateSql = "TRUNCATE TABLE penjualan";
-														$config->exec($truncateSql);
 													} catch (Exception $e) {
 														echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
 													}
