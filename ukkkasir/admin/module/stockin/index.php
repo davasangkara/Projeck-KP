@@ -8,6 +8,7 @@
                     <th>No</th>
                     <th>Nama Barang</th>
                     <th>Type Barang</th>
+                    <th>Merk</th>
                     <th>Stok Masuk</th>
                     <th>Harga Beli</th>
                     <th>Harga Jual</th>
@@ -24,6 +25,7 @@
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_barang']; ?></td>
                         <td><?php echo $isi['barang_type']; ?></td>
+                        <td><?php echo $isi['merk']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>
                         <td><?php echo $isi['harga_beli']; ?></td>
                         <td><?php echo $isi['harga_jual']; ?></td>

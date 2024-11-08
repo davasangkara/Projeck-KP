@@ -185,7 +185,7 @@ if (!empty($_SESSION['admin'])) {
             $row_tampil->execute(array($id_barang));
             $hasil = $row_tampil->fetch(PDO::FETCH_ASSOC);
 
-            if ($hasil['stok'] > $jumlah) {
+            if ($hasil['stok'] >= $jumlah) {
                 $jual = $hasil['harga_jual'];
                 $total = $jual * $jumlah;
                 $data1 = [

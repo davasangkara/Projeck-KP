@@ -1,4 +1,4 @@
-<h4>Kategori</h4>
+<h4>Total Stock Barang</h4>
 <br />
 <?php if (isset($_GET['success'])) { ?>
     <div class="alert alert-success">
@@ -27,6 +27,7 @@
                     <th>No.</th>
                     <th>Nama Barang</th>
                     <th>Type Barang</th>
+                    <th>Merk</th>
                     <th>Harga Beli</th>
                     <th>Harga Jual</th>
                     <th>Stok</th>
@@ -43,6 +44,7 @@
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_barang']; ?></td>
                         <td><?php echo $isi['barang_type']; ?></td>
+                        <td><?php echo $isi['merk']; ?></td>
                         <td><?php echo $isi['harga_beli']; ?></td>
                         <td><?php echo $isi['harga_jual']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>

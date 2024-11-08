@@ -23,8 +23,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-$headers = ['No', 'Nama Barang', 'Stok', 'Harga Beli', 'Harga Jual', 'Transaction Date'];
-foreach (range('A', 'F') as $index => $column) {
+$headers = ['No', 'Nama Barang', 'Type', 'Merk', 'Stok', 'Harga Beli', 'Harga Jual', 'Transaction Date'];
+foreach (range('A', 'H') as $index => $column) {
     $sheet->setCellValue($column . '1', $headers[$index]);
 }
 
@@ -43,10 +43,10 @@ $headerStyle = [
         'vertical' => Alignment::VERTICAL_CENTER,
     ],
 ];
-$sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
+$sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
 $sheet->getRowDimension(1)->setRowHeight(30);
 
-foreach (range('A', 'F') as $column) {
+foreach (range('A', 'H') as $column) {
     $sheet->getColumnDimension($column)->setAutoSize(true);
 }
 
@@ -60,15 +60,17 @@ if (empty($hasil)) {
 $row = 2;
 foreach ($hasil as $index => $isi) {
     $sheet->setCellValue('A' . $row, $index + 1);
-    $sheet->setCellValue('B' . $row, $isi['nama_barang'] . '-' . $isi['barang_type']);
-    $sheet->setCellValue('C' . $row, $isi['stok']);
-    $sheet->setCellValue('D' . $row, $isi['harga_beli']);
-    $sheet->setCellValue('E' . $row, $isi['harga_jual']);
-    $sheet->setCellValue('F' . $row, $isi['transaction_date']);
+    $sheet->setCellValue('B' . $row, $isi['nama_barang']);
+    $sheet->setCellValue('C' . $row, $isi['barang_type']);
+    $sheet->setCellValue('D' . $row, $isi['merk']);
+    $sheet->setCellValue('E' . $row, $isi['stok']);
+    $sheet->setCellValue('F' . $row, $isi['harga_beli']);
+    $sheet->setCellValue('G' . $row, $isi['harga_jual']);
+    $sheet->setCellValue('H' . $row, $isi['transaction_date']);
     $row++;
 }
 
-$dataRange = 'A1:F' . ($row - 1);
+$dataRange = 'A1:H' . ($row - 1);
 $borderStyle = [
     'borders' => [
         'allBorders' => [
