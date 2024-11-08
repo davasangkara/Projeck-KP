@@ -7,6 +7,7 @@ if (!empty($_SESSION['admin'])) {
     echo '<script>window.location="login.php";</script>';
     exit;
 }
+
 require 'config.php';
 include $view;
 $lihat = new view($config);
@@ -74,6 +75,15 @@ $hsl = $lihat->penjualan();
             <div class="col-sm-4"></div>
         </div>
     </div>
+
+    <?php
+    try {
+        $truncateSql = "TRUNCATE TABLE penjualan";
+        $config->exec($truncateSql);
+    } catch (Exception $e) {
+        echo '<script>alert("Error saat menghapus data: ' . $e->getMessage() . '");</script>';
+    }
+    ?>
 </body>
 
 </html>

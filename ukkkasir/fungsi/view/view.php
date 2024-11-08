@@ -393,4 +393,22 @@ class view
 
         return $hasil;
     }
+
+    public function printNotaAfterPayment()
+    {
+        $sql = "SELECT nota.* ,
+                barang.id, 
+                barang.nama_barang, 
+                barang.type,
+                barang.merk,
+                member.id_member,
+                member.nm_member from nota 
+                left join barang on barang.id=nota.barang_id 
+                left join member on member.id_member=nota.id_member
+                ORDER BY id_nota";
+        $row = $this->db->prepare($sql);
+        $row->execute();
+        $hasil = $row->fetchAll();
+        return $hasil;
+    }
 }
