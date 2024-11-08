@@ -322,6 +322,7 @@ class view
     {
         $sql = "select stok_transactions.*,
                 barang.nama_barang,
+                barang.merk,
                 barang.type as barang_type
                 from stok_transactions 
                 inner join barang on stok_transactions.barang_id = barang.id
@@ -339,7 +340,8 @@ class view
     {
         $sql = "select transaksi.* ,
                 barang.nama_barang,
-                barang.type as barang_type
+                barang.type as barang_type,
+                barang.merk
                 from transaksi
                 inner join barang on transaksi.barang_id = barang.id
         ";
@@ -378,6 +380,7 @@ class view
     {
         $sql = "select stok_transactions.*,
                 barang.nama_barang,
+                barang.merk,
                 barang.type as barang_type
                 from stok_transactions 
                 inner join barang on stok_transactions.barang_id = barang.id

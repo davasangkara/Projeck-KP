@@ -8,6 +8,7 @@
                     <th>No</th>
                     <th>Nama Barang</th>
                     <th>Type Barang</th>
+                    <th>Merk</th>
                     <th>Stok Keluar</th>
                     <th>Harga Jual</th>
                     <th>Tanggal Transaksi</th>
@@ -23,6 +24,7 @@
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_barang']; ?></td>
                         <td><?php echo $isi['barang_type']; ?></td>
+                        <td><?php echo $isi['merk']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>
                         <td><?php echo $isi['harga_jual']; ?></td>
                         <td><?php echo date("d F Y", strtotime($isi['transaction_date'])); ?></td>
