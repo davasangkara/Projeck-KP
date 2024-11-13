@@ -20,6 +20,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
+$bulan = isset($_GET['bulan']) ? (int)$_GET['bulan'] : null;
+$tahun = isset($_GET['tahun']) ? (int)$_GET['tahun'] : null;
+
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
@@ -50,7 +53,7 @@ foreach (range('A', 'G') as $column) {
     $sheet->getColumnDimension($column)->setAutoSize(true);
 }
 
-$hasil = $lihat->getAllTransactionStockOut();
+$hasil = $lihat->getAllTransactionStockOut($bulan, $tahun);
 
 if (empty($hasil)) {
     error_log('No data retrieved from getAllTransactionStockOut()');
