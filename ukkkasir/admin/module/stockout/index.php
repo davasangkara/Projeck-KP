@@ -33,8 +33,38 @@
                 } ?>
             </tbody>
         </table>
-        <a href="stock_out_to_excel.php" class="btn btn-info"><i class="fa fa-download"></i>
-            Export to Excel</a>
+        <form action="stock_out_to_excel.php" method="GET" class="form-inline">
+            <label for="bulan">Bulan:</label>
+            <select name="bulan" id="bulan" class="form-control ml-2">
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+
+            <label for="tahun">Tahun:</label>
+            <select name="tahun" id="tahun" class="form-control ml-1">
+                <?php
+                $currentYear = date("Y");
+                for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                    echo "<option value='$i'>$i</option>";
+                }
+                ?>
+            </select>
+
+            <button type="submit" class="btn btn-info ml-1">
+                <i class="fa fa-download"></i> Export to Excel
+            </button>
+        </form>
+
 
     </div>
 </div>

@@ -376,23 +376,31 @@ class view
         return $hasil;
     }
 
-    public function getAllTransactionStockOut()
+    public function getAllTransactionStockOut($bulan = null, $tahun = null)
     {
-        $sql = "select stok_transactions.*,
+        $sql = "SELECT stok_transactions.*,
                 barang.nama_barang,
                 barang.merk,
-                barang.type as barang_type
-                from stok_transactions 
-                inner join barang on stok_transactions.barang_id = barang.id
-                where stok_transactions.type like 'OUT'
-                ";
+                barang.type AS barang_type
+                FROM stok_transactions 
+                INNER JOIN barang ON stok_transactions.barang_id = barang.id
+                WHERE stok_transactions.type LIKE 'OUT'";
+
+        if ($bulan && $tahun) {
+            $sql .= " AND YEAR(stok_transactions.transaction_date) = :tahun AND MONTH(stok_transactions.transaction_date) = :bulan";
+        }
+
         $row = $this->db->prepare($sql);
+
+        if ($bulan && $tahun) {
+            $row->bindParam(':tahun', $tahun, PDO::PARAM_INT);
+            $row->bindParam(':bulan', $bulan, PDO::PARAM_INT);
+        }
+
         $row->execute();
-
-        $hasil = $row->fetchAll(PDO::FETCH_ASSOC);
-
-        return $hasil;
+        return $row->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function printNotaAfterPayment()
     {
