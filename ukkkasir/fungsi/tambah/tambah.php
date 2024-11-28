@@ -64,28 +64,36 @@ if (!empty($_SESSION['admin'])) {
             $hargaJual = htmlentities($_POST['harga_jual']);
             $stok = htmlentities($_POST['stok']);
 
-            $cekSql = 'SELECT * FROM transaksi WHERE barang_id = ? AND type = "IN" LIMIT 1';
-            $cekStmt = $config->prepare($cekSql);
-            $cekStmt->execute([$idBarang]);
-            $existingData = $cekStmt->fetch();
+            // $cekSql = 'SELECT * FROM transaksi WHERE barang_id = ? AND type = "IN" LIMIT 1';
+            // $cekStmt = $config->prepare($cekSql);
+            // $cekStmt->execute([$idBarang]);
+            // $existingData = $cekStmt->fetch();
 
-            if ($existingData) {
-                $updateSql = 'UPDATE transaksi SET 
-                              harga_beli = ?, harga_jual = ?, stok = stok + ? 
-                              WHERE barang_id = ? AND type = "IN"';
-                $updateStmt = $config->prepare($updateSql);
+            // if ($existingData) {
+            //     $updateSql = 'UPDATE transaksi SET 
+            //                   harga_beli = ?, harga_jual = ?, stok = stok + ? 
+            //                   WHERE barang_id = ? AND type = "IN"';
+            //     $updateStmt = $config->prepare($updateSql);
 
-                if (!$updateStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
-                    throw new Exception("Gagal memperbarui stok!");
-                }
-            } else {
-                $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id, created_at) 
-                              VALUES ("IN", ?, ?, ?, ?, NOW())';
-                $insertStmt = $config->prepare($insertSql);
+            //     if (!$updateStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+            //         throw new Exception("Gagal memperbarui stok!");
+            //     }
+            // } else {
+            //     $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id, created_at) 
+            //                   VALUES ("IN", ?, ?, ?, ?, NOW())';
+            //     $insertStmt = $config->prepare($insertSql);
 
-                if (!$insertStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
-                    throw new Exception("Gagal menambah stok!");
-                }
+            //     if (!$insertStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+            //         throw new Exception("Gagal menambah stok!");
+            //     }
+            // }
+            // Masukin stok barang walaupun sama, jadi barang baru
+            $insertSql = 'INSERT INTO transaksi (type, harga_beli, harga_jual, stok, barang_id, created_at) 
+            VALUES ("IN", ?, ?, ?, ?, NOW())';
+            $insertStmt = $config->prepare($insertSql);
+
+            if (!$insertStmt->execute([$hargaBeli, $hargaJual, $stok, $idBarang])) {
+                throw new Exception("Gagal menambah stok!");
             }
 
             $transaksiStockSql = 'INSERT INTO stok_transactions (type, harga_beli, harga_jual, stok, barang_id, transaction_date)
