@@ -209,6 +209,30 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
+    if (!empty($_GET['stock']) && $_GET['stock'] == 'edit') {
+        try {
+            $id = htmlentities($_POST['id']);
+            $hargaBeli = htmlentities($_POST['harga_beli']);
+            $hargaJual = htmlentities($_POST['harga_jual']);
+            $stok = htmlentities($_POST['stok']);
+
+            $updateSql = 'UPDATE transaksi 
+                          SET harga_beli = ?, harga_jual = ?, stok = ? 
+                          WHERE id = ?';
+            $updateStmt = $config->prepare($updateSql);
+
+            if (!$updateStmt->execute([$hargaBeli, $hargaJual, $stok, $id])) {
+                throw new Exception("Gagal memperbarui stok!");
+            }
+
+            echo '<script>window.location="../../index.php?page=stock&success=edit-data"</script>';
+        } catch (PDOException $e) {
+            echo 'Kesalahan Database: ' . $e->getMessage();
+        } catch (Exception $e) {
+            echo 'Kesalahan: ' . $e->getMessage();
+        }
+    }
+
 
     if (!empty($_GET['cari_barang'])) {
         $cari = trim(strip_tags($_POST['keyword']));

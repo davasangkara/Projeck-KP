@@ -32,6 +32,7 @@
                     <th>Harga Jual</th>
                     <th>Stok</th>
                     <th>Tanggal Transaksi</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,16 @@
                         <td><?php echo $isi['harga_jual']; ?></td>
                         <td><?php echo $isi['stok']; ?></td>
                         <td><?php echo date("d F Y", strtotime($isi['created_at'])); ?></td>
+                        <td>
+                            <a href="#" class="btn btn-warning btn-edit-stock"
+                                data-id="<?php echo $isi['id']; ?>"
+                                data-harga-beli="<?php echo $isi['harga_beli']; ?>"
+                                data-harga-jual="<?php echo $isi['harga_jual']; ?>"
+                                data-stok="<?php echo $isi['stok']; ?>">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </td>
+
                     </tr>
                 <?php $no++;
                 } ?>
@@ -108,3 +119,53 @@
     </div>
 
 </div>
+
+<div id="editStockModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#ffc107;color:#fff;">
+                <h5 class="modal-title"><i class="fa fa-edit"></i> Edit Stock</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="formEditStock" action="fungsi/edit/edit.php?stock=edit" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editStockId">
+                    <table class="table table-striped bordered">
+                        <tr>
+                            <td>Harga Beli</td>
+                            <td><input type="number" name="harga_beli" id="editHargaBeli" required class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>Harga Jual</td>
+                            <td><input type="number" name="harga_jual" id="editHargaJual" required class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah</td>
+                            <td><input type="number" name="stok" id="editStok" required class="form-control"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Save Changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).on('click', '.btn-edit-stock', function() {
+        const id = $(this).data('id');
+        const hargaBeli = $(this).data('harga-beli');
+        const hargaJual = $(this).data('harga-jual');
+        const stok = $(this).data('stok');
+
+        $('#editStockId').val(id);
+        $('#editHargaBeli').val(hargaBeli);
+        $('#editHargaJual').val(hargaJual);
+        $('#editStok').val(stok);
+
+        $('#editStockModal').modal('show');
+    });
+</script>

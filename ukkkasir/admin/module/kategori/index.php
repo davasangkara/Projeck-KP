@@ -58,7 +58,7 @@ if (!empty($_GET['uid'])) {
                     <th>No.</th>
                     <th>Kategori</th>
                     <th>Tanggal Input</th>
-                    <!-- <th>Status</th> -->
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,6 +71,13 @@ if (!empty($_GET['uid'])) {
                         <td><?php echo $no; ?></td>
                         <td><?php echo $isi['nama_kategori']; ?></td>
                         <td><?php echo $isi['tgl_input']; ?></td>
+                        <td>
+                            <button class="btn btn-success edit-btn"
+                                data-id="<?= $isi['id_kategori']; ?>"
+                                data-nama="<?= $isi['nama_kategori']; ?>">
+                                <i class="fa fa-pen"></i> Edit
+                            </button>
+                        </td>
                     </tr>
                 <?php $no++;
                 } ?>
@@ -78,6 +85,34 @@ if (!empty($_GET['uid'])) {
         </table>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" action="fungsi/edit/edit.php?kategori=edit">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Kategori</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="edit-id">
+                    <div class="form-group">
+                        <label for="edit-nama">Nama Kategori</label>
+                        <input type="text" class="form-control" id="edit-nama" name="kategori" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <script>
     document.querySelectorAll('.toggle-status').forEach(function(checkbox) {
@@ -100,6 +135,23 @@ if (!empty($_GET['uid'])) {
                         alert('Gagal memperbarui status.');
                     }
                 });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        const editModal = document.getElementById('editModal');
+        const editId = document.getElementById('edit-id');
+        const editNama = document.getElementById('edit-nama');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const nama = this.getAttribute('data-nama');
+                editId.value = id;
+                editNama.value = nama;
+                $(editModal).modal('show');
+            });
         });
     });
 </script>
