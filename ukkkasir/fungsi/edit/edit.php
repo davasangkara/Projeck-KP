@@ -209,6 +209,36 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
+    if (!empty($_GET['master_barang']) && $_GET['master_barang'] == 'edit') {
+        try {
+            $config->beginTransaction();
+
+            $id = htmlentities($_POST['id']);
+            $idKategori = htmlentities($_POST['kategori']);
+            $nama = htmlentities($_POST['nama']);
+            $merk = htmlentities($_POST['merk']);
+            $unitId = htmlentities($_POST['unit_id']);
+            $type = htmlentities($_POST['type']);
+
+            $updateSql = 'UPDATE barang 
+                          SET id_kategori = ?, nama_barang = ?, merk = ?, unit_id = ?, type = ? 
+                          WHERE id = ?';
+            $stmt = $config->prepare($updateSql);
+
+            if (!$stmt->execute([$idKategori, $nama, $merk, $unitId, $type, $id])) {
+                throw new Exception("Gagal memperbarui data barang.");
+            }
+
+            $config->commit();
+            echo '<script>window.location="../../index.php?page=master_barang&success=edit-data"</script>';
+        } catch (PDOException $e) {
+            $config->rollBack();
+            echo 'Kesalahan Database: ' . $e->getMessage();
+        } catch (Exception $e) {
+            $config->rollBack();
+            echo 'Kesalahan: ' . $e->getMessage();
+        }
+    }
     if (!empty($_GET['stock']) && $_GET['stock'] == 'edit') {
         try {
             $id = htmlentities($_POST['id']);

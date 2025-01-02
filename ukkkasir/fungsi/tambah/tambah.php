@@ -53,8 +53,6 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
-
-
     if (!empty($_GET['stock'])) {
         try {
             $config->beginTransaction();
